@@ -62,3 +62,128 @@
 
    널 클래스에 doing() 메서드를 오버라이딩하여 null에 해당하는 코드 작성
    => obj.doing();
+
+## 예제 소스코드 리팩토링
+
+1. 널 클래스 만들기
+
+```
+export class NullLabel extends Label {
+  constructor() {
+    super("(none)");
+  }
+}
+
+```
+
+2. isNull() 메서드 추가
+
+   - Label.ts
+
+     ```
+     export class Label {
+       constructor(private label: string) {}
+
+       display() {
+         console.log("display : " + this.label);
+       }
+
+       toString() {
+         return this.label;
+       }
+
+       isNull() {
+         return false;
+       }
+     }
+
+
+     ```
+
+   * NullLabel.ts
+
+     ```
+       export class NullLabel extends Label {
+         constructor() {
+           super("(none)");
+         }
+
+         override isNull() {
+           return true;
+         }
+       }
+     ```
+
+3. null 치환
+
+   - Person.ts
+
+   ```
+     display() {
+       if (!this.name?.isNull()) {
+         this.name!.display();
+       }
+
+       if (!this.mail?.isNull()) {
+         this.mail!.display();
+       }
+     }
+
+     toString() {
+       let result = "[ Person: ";
+       result += "name = ";
+       if (this.name?.isNull()) {
+         result += '"(none)"';
+       } else {
+         result += this.name;
+       }
+
+       result += " mail = ";
+       if (this.mail?.isNull()) {
+         result += '"(none)"';
+       } else {
+         result += this.mail;
+       }
+
+       result += " ]";
+
+       return result;
+     }
+   ```
+
+4. isNull() 메서드를 사용하는 조건 판단하기
+
+- NullLabel.ts
+
+  - display override
+
+  ```
+      export class NullLabel extends Label {
+        constructor() {
+          super("(none)");
+        }
+
+        override isNull() {
+          return true;
+        }
+
+        override display(): void {}
+      }
+  ```
+
+* Person.ts
+
+```
+   constructor(
+    private name: Label | null = null,
+    private mail: Label | null = null
+  ) {
+    if (name === null) {
+      this.name = new NullLabel();
+    }
+
+    if (mail === null) {
+      this.mail = new NullLabel();
+    }
+  }
+```
