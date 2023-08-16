@@ -4,8 +4,7 @@ import * as readline from "readline";
 interface HashMap {
   [key: string]: any;
 }
-//1. 이상한 변수명부터 바꾸기
-// 2. 라이브러리 활용
+
 export class SimpleDataBase {
   private hashMap: HashMap = {};
 
@@ -15,31 +14,26 @@ export class SimpleDataBase {
       crlfDelay: Infinity, // 줄바꿈 문자를 '\r\n'으로 인식
     });
     try {
-      let line: string = "";
-      for await (const textLine of rl) {
-        line = textLine;
-        // let scanningKey = true;
-        // let keyBuffer: string[] = [];
-        // let valueBuffer: string[] = [];
+      let tmp: string = "";
+      for await (const line of rl) {
+        tmp = line;
+        let flag = true;
+        let sb1: string[] = [];
+        let sb2: string[] = [];
 
-        // for (let i = 0; i < line.length; i++) {
-        //   const c = line[i];
-        //   if (scanningKey) {
-        //     if (c == "=") {
-        //       scanningKey = false;
-        //     } else {
-        //       keyBuffer.push(c);
-        //     }
-        //   } else {
-        //     valueBuffer.push(c);
-        //   }
-        // }
-        const index = line.indexOf("=");
-        if (index > 0) {
-          const key = line.substring(0, index);
-          const value = line.substring(index + 1);
-          this.hashMap[key] = value;
+        for (let i = 0; i < tmp.length; i++) {
+          const tmp2 = tmp[i];
+          if (flag) {
+            if (tmp2 == "=") {
+              flag = false;
+            } else {
+              sb1.push(tmp2);
+            }
+          } else {
+            sb2.push(tmp2);
+          }
         }
+        this.hashMap[sb1.join("")] = sb2.join("");
       }
     } catch (e) {
       console.error(e);
