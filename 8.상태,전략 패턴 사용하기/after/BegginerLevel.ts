@@ -1,6 +1,7 @@
 import { PlayerLevel } from "./PlayerLevel";
 
 export class BegginerLevel extends PlayerLevel {
+  //레벨클래스이 여러가지 일을 하는 게 아닌 하나의 일만 하니까 싱글톤으로
   static instance = new BegginerLevel();
   static getInstance() {
     return new BegginerLevel();
