@@ -1,6 +1,6 @@
 import { Subject } from "./Subject";
 
-export class Student extends Subject {
+export class Student {
   majorSubject: Subject;
   subjectList: Subject[] = [];
   constructor(
@@ -9,7 +9,6 @@ export class Student extends Subject {
     subjectName: string,
     subjectCode: number
   ) {
-    super();
     this.majorSubject = new Subject(subjectName, subjectCode);
     this.subjectList.push(this.majorSubject);
   }
